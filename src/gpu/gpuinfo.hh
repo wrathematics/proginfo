@@ -5,6 +5,7 @@
 
 #include <cstdio>
 
+#include "../stats.hh"
 #include "nvml.hh"
 
 
@@ -20,19 +21,24 @@ namespace proginfo
         _ngpus = nvml::device::get_count();
         
         _totalram = new double[_ngpus];
-        _usedram = new double[_ngpus];
+        _ramstats = new stats<double>[_ngpus];
         
         for (int gpu=0; gpu<_ngpus; gpu++)
         {
           _dev = nvml::device::get_handle_by_index(gpu);
-          nvml::device::get_memory_info(_dev, _usedram+gpu, _totalram+gpu);
+          double tmp;
+          nvml::device::get_memory_info(_dev, &tmp, _totalram+gpu);
+          
+          _ramstats[gpu].add_sample(tmp);
         }
       };
+      
+      
       
       ~gpuinfo()
       {
         delete _totalram;
-        delete _usedram;
+        delete _ramstats;
         
         nvml::shutdown();
       };
@@ -57,16 +63,22 @@ namespace proginfo
       int _ngpus;
       nvmlDevice_t _dev;
       double *_totalram;
-      double *_usedram;
+      stats<double> *_ramstats;
     
     
     
     private:
       void print_md()
       {
-        printf("* Max GPU RAM usage: \n");
+        printf("* GPU RAM usage [MIN/MEAN/MAX (SDEV) / TOTAL]: \n");
         for (int gpu=0; gpu<_ngpus; gpu++)
-          printf("  - Device %d: %.3f / %.3f GiB\n", gpu, usedram(gpu), totalram(gpu));
+          printf("  - Device %d: %.3f/%.3f/%.3f (%.3f) / %.3f GiB\n",
+            gpu,
+            b2gb(_ramstats[gpu].min()),
+            b2gb(_ramstats[gpu].mean()),
+            b2gb(_ramstats[gpu].max()),
+            b2gb(_ramstats[gpu].sd()),
+            b2gb(_totalram[gpu]));
       }
       
       
@@ -81,34 +93,16 @@ namespace proginfo
       
       
       
-      double totalram(int gpu, bool si_unit=false)
-      {
-        return b2gb(_totalram[gpu], si_unit);
-      };
-      
-      double usedram(int gpu, bool si_unit=false)
-      {
-        return b2gb(_usedram[gpu], si_unit);
-      };
-      
-      double freeram(int gpu, bool si_unit=false)
-      {
-        return b2gb(_totalram[gpu] - _usedram[gpu], si_unit);
-      };
-      
-      
-      
       void poll_ram()
       {
-        double tmp1;
+        double tmp;
         double tmp2;
         
         for (int gpu=0; gpu<_ngpus; gpu++)
         {
           _dev = nvml::device::get_handle_by_index(gpu);
-          nvml::device::get_memory_info(_dev, &tmp1, &tmp2);
-          if (tmp1 > _usedram[gpu])
-            _usedram[gpu] = tmp1;
+          nvml::device::get_memory_info(_dev, &tmp, &tmp2);
+          _ramstats[gpu].add_sample(tmp);
         }
       };
   };
