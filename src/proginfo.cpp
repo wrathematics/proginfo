@@ -45,7 +45,7 @@ int main(int argc, char **argv)
   t.off();
   
   
-  printf("\n## Program Info\n");
+  printf("\n## Program Info (from %d polls)\n", ct);
   t.print();
   m.print();
   g.print();
