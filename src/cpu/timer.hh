@@ -26,18 +26,14 @@ namespace proginfo
         _pstart = clock();
       };
       
+      
+      
       void off()
       {
         std::chrono::duration<double> elapsed = query_clock() - _wstart;
         _wtime += elapsed.count();
         
         _ptime += ((float) (clock() - _pstart)) / ((float)CLOCKS_PER_SEC);
-      };
-      
-      void reset()
-      {
-        _wtime = 0;
-        _ptime = 0;
       };
       
       
@@ -52,16 +48,6 @@ namespace proginfo
       void sleep(int ms)
       {
         std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-      };
-      
-      
-      
-      float wtime() const {return _wtime;};
-      float ptime() const {return _ptime;};
-      
-      float cpu_util() const
-      {
-        return _ptime / _wtime * 100;
       };
     
     
@@ -79,6 +65,21 @@ namespace proginfo
       {
         printf("* Wall time: %.3f\n", _wtime);
         printf("* CPU utilization: %.3f%%\n", cpu_util());
+      };
+      
+      
+      
+      float cpu_util() const
+      {
+        return _ptime / _wtime * 100;
+      };
+      
+      
+      
+      void reset()
+      {
+        _wtime = 0;
+        _ptime = 0;
       };
       
       

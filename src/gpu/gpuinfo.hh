@@ -44,31 +44,11 @@ namespace proginfo
         poll_ram();
       }
       
+      
+      
       void print()
       {
         print_md();
-      };
-      
-      
-      
-      int ngpus()
-      {
-        return _ngpus;
-      };
-      
-      double totalram(int gpu, bool si_unit=false)
-      {
-        return b2gb(_totalram[gpu], si_unit);
-      };
-      
-      double usedram(int gpu, bool si_unit=false)
-      {
-        return b2gb(_usedram[gpu], si_unit);
-      };
-      
-      double freeram(int gpu, bool si_unit=false)
-      {
-        return b2gb(_totalram[gpu] - _usedram[gpu], si_unit);
       };
     
     
@@ -97,6 +77,23 @@ namespace proginfo
           return x / 1000.0 / 1000.0 / 1000.0;
         else
           return x / 1024.0 / 1024.0 / 1024.0;
+      };
+      
+      
+      
+      double totalram(int gpu, bool si_unit=false)
+      {
+        return b2gb(_totalram[gpu], si_unit);
+      };
+      
+      double usedram(int gpu, bool si_unit=false)
+      {
+        return b2gb(_usedram[gpu], si_unit);
+      };
+      
+      double freeram(int gpu, bool si_unit=false)
+      {
+        return b2gb(_totalram[gpu] - _usedram[gpu], si_unit);
       };
       
       

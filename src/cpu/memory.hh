@@ -35,6 +35,20 @@ namespace proginfo
       {
         print_md();
       };
+    
+    
+    
+    protected:
+      memsize_t _freeram;
+      memsize_t _totalram;
+    
+    
+    
+    private:
+      void print_md()
+      {
+        printf("* Max CPU RAM usage: %.3f / %.3f GiB\n", usedram(), totalram());
+      };
       
       
       
@@ -51,20 +65,6 @@ namespace proginfo
       float freeram()
       {
         return memsize_2_floatgb(_freeram);
-      };
-    
-    
-    
-    protected:
-      memsize_t _freeram;
-      memsize_t _totalram;
-    
-    
-    
-    private:
-      void print_md()
-      {
-        printf("* Max CPU RAM usage: %.3f / %.3f GiB\n", usedram(), totalram());
       };
       
       
