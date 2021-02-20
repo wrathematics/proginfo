@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <thread>
 
-#include "process.hh"
+#include "argparse.hh"
 
 #include "cpu/memory.hh"
 #include "cpu/timer.hh"
@@ -14,15 +14,16 @@
 
 int main(int argc, char **argv)
 {
+  proginfo::args a(argc, argv);
+  
   proginfo::timer t;
   proginfo::meminfo m;
   proginfo::gpuinfo g;
   unsigned int ct = 0;
   
   std::atomic<bool> child_done(false);
-  std::thread child([&child_done, &argc, &argv] {
-    std::stringstream s = proginfo::process_args(argc, argv);
-    int ret = std::system(s.str().c_str());
+  std::thread child([&child_done, &a] {
+    int ret = std::system(a.get_cmd());
     if (ret < 0) // TODO actually deal with this
       throw std::runtime_error("Unable to launch command");
     child_done = true;
