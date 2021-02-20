@@ -61,13 +61,16 @@ namespace proginfo
     
     protected:
       int _ngpus;
-      nvmlDevice_t _dev;
       double *_totalram;
       stats<double> *_ramstats;
     
     
     
     private:
+      nvmlDevice_t _dev;
+      
+      
+      
       void print_md()
       {
         printf("* GPU RAM usage [MIN/MEAN/MAX (SDEV) / TOTAL]: \n");
