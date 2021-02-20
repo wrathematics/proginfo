@@ -15,6 +15,10 @@ namespace proginfo
     public:
       stats()
       {
+        std::numeric_limits<T> ext;
+        _min = ext.max();
+        _max = ext.min();
+        
         _mean = 0.0;
         _s = 0;
         _n = 0;
@@ -24,18 +28,10 @@ namespace proginfo
       
       void add_sample(T x)
       {
-        if (_n == 0)
-        {
+        if (_max < x)
           _max = x;
+        if (_min > x)
           _min = x;
-        }
-        else
-        {
-          if (_max < x)
-            _max = x;
-          if (_min > x)
-            _min = x;
-        }
         
         _n++;
         double r = ((double) x) - _mean;
