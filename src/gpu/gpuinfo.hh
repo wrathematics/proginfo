@@ -73,9 +73,9 @@ namespace proginfo
       
       void print_md()
       {
-        printf("* GPU RAM usage [MIN/MEAN/MAX (SDEV) / TOTAL]: \n");
+        printf("  - RAM:\n");
         for (int gpu=0; gpu<_ngpus; gpu++)
-          printf("  - Device %d: %.3f/%.3f/%.3f (%.3f) / %.3f GiB\n",
+          printf("    + (Device %d) %.3f/%.3f/%.3f (%.3f) / %.3f GiB\n",
             gpu,
             b2gb(_ramstats[gpu].min()),
             b2gb(_ramstats[gpu].mean()),

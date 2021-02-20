@@ -67,8 +67,8 @@ namespace proginfo
       
       void print_md()
       {
-        printf("* Wall time: %.3f\n", _wtime);
-        printf("* CPU utilization: %.3f%%\n", cpu_util());
+        printf("  - Wall time: %.3f\n", _wtime);
+        printf("  - Utilization: %.3f%%\n", cpu_util());
       };
       
       

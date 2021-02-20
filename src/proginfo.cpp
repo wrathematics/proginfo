@@ -46,8 +46,10 @@ int main(int argc, char **argv)
   
   
   printf("\n## Program Info (from %d polls)\n", ct);
+  printf("* CPU\n");
   t.print();
   m.print();
+  printf("* GPU\n");
   g.print();
   
   return 0;

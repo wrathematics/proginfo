@@ -47,24 +47,13 @@ namespace proginfo
     private:
       void print_md()
       {
-        printf("* Max CPU RAM usage: %.3f / %.3f GiB\n", usedram(), totalram());
-      };
-      
-      
-      
-      float totalram()
-      {
-        return  memsize_2_floatgb(_totalram);
-      };
-      
-      float usedram()
-      {
-        return memsize_2_floatgb(_totalram - _freeram);
-      };
-      
-      float freeram()
-      {
-        return memsize_2_floatgb(_freeram);
+        // NOTE: max and min are swapped since we take the complement from total
+        printf("  - RAM: %.3f/%.3f/%.3f (%.3f) / %.3f GiB\n",
+          b2gb(_totalram - _ramstats.max()),
+          b2gb(_totalram - _ramstats.mean()),
+          b2gb(_totalram - _ramstats.min()),
+          b2gb(_totalram - _ramstats.sd()),
+          b2gb(_totalram));
       };
       
       
