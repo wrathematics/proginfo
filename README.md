@@ -20,9 +20,13 @@ MIN/MEAN/MAX (SD) / TOTAL
 
 2. GPU utilization rates are the "percent of time over the past second in which any work has been executing on the GPU." ([reference](http://developer.download.nvidia.com/compute/DevZone/NVML/doxygen/structnvml_utilization__t.html)).
 
-3. GPU memory numbers are in GiB (divide bytes by 1024^3). The consumed memory is "equal to the sum of memory allocated by all active channels on the device." ([reference](http://developer.download.nvidia.com/compute/DevZone/NVML/doxygen/group__group4.html#g2dfeb1db82aa1de91aa6edf941c85ca8))
+3. The consumed memory on GPUs is "equal to the sum of memory allocated by all active channels on the device." ([reference](http://developer.download.nvidia.com/compute/DevZone/NVML/doxygen/group__group4.html#g2dfeb1db82aa1de91aa6edf941c85ca8))
 
-4. CPU utilization is reported by `clock()`, which is wrong. Will probably fix eventually.
+4. The consumed memory for CPU is reported as the complement (from total) of the sum of buffered, cached, and free RAM on Linux.
+
+5. All memory numbers are in GiB (divide bytes by 1024^3).
+
+6. CPU utilization is reported by `clock()`, which is wrong. Will probably fix eventually.
 
 
 
