@@ -6,9 +6,14 @@
 * **Bug reports**: https://github.com/wrathematics/proginfo/issues
 
 
-proginfo is a small utility for getting some basic information about a program, sort of like the unix command `time`. This is not a replacement for a real profiler.
+proginfo is a small utility for getting some basic information about a program, sort of like a fancier version of the unix command `time`. This is not a replacement for a real profiler.
 
-Under development. More later.
+The program reports wallclock time and system level RAM usage for both CPU and any (NVIDIA) GPUs. Sampled values are reported as follows
+
+    MIN/MEAN/MAX (SD) / TOTAL
+
+Additional compute/resource utilization metrics will be added soon.
+
 
 
 ## Compiling
