@@ -8,6 +8,8 @@
 
 #include "platform.h"
 
+#include "../stats.hh"
+
 
 namespace proginfo
 {
@@ -17,16 +19,14 @@ namespace proginfo
       meminfo()
       {
         totalram(&_totalram);
-        _freeram = totalfree();
+        _ramstats.add_sample(totalfree());
       };
       
       
       
       void poll()
       {
-        memsize_t tmp = totalfree();
-        if (tmp < _freeram)
-          _freeram = tmp;
+        _ramstats.add_sample(totalfree());
       };
       
       
@@ -39,8 +39,8 @@ namespace proginfo
     
     
     protected:
-      memsize_t _freeram;
       memsize_t _totalram;
+      stats<memsize_t> _ramstats;
     
     
     
@@ -81,7 +81,7 @@ namespace proginfo
       
       
       
-      float memsize_2_floatgb(memsize_t x, bool si_unit=false)
+      float b2gb(memsize_t x, bool si_unit=false)
       {
         if (si_unit)
           return (float) x / 1000 / 1000 / 1000;
