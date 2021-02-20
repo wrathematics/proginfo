@@ -23,6 +23,8 @@ namespace proginfo
         _totalram = new double[_ngpus];
         _ramstats = new stats<double>[_ngpus];
         
+        _utilstats = new stats<int>[_ngpus];
+        
         for (int gpu=0; gpu<_ngpus; gpu++)
         {
           _dev = nvml::device::get_handle_by_index(gpu);
@@ -40,6 +42,8 @@ namespace proginfo
         delete _totalram;
         delete _ramstats;
         
+        delete _utilstats;
+        
         nvml::shutdown();
       };
       
@@ -48,6 +52,7 @@ namespace proginfo
       void poll()
       {
         poll_ram();
+        poll_util();
       }
       
       
@@ -63,6 +68,7 @@ namespace proginfo
       int _ngpus;
       double *_totalram;
       stats<double> *_ramstats;
+      stats<int> *_utilstats;
     
     
     
@@ -73,9 +79,18 @@ namespace proginfo
       
       void print_md()
       {
+        printf("  - Utilization\n");
+        for (int gpu=0; gpu<_ngpus; gpu++)
+          printf("      + (Device %d) %d/%.2f/%d (%.2f) / 100%%\n",
+            gpu,
+            _utilstats[gpu].min(),
+            _utilstats[gpu].mean(),
+            _utilstats[gpu].max(),
+            _utilstats[gpu].sd());
+        
         printf("  - RAM:\n");
         for (int gpu=0; gpu<_ngpus; gpu++)
-          printf("    + (Device %d) %.3f/%.3f/%.3f (%.3f) / %.3f GiB\n",
+          printf("      + (Device %d) %.3f/%.3f/%.3f (%.3f) / %.3f GiB\n",
             gpu,
             b2gb(_ramstats[gpu].min()),
             b2gb(_ramstats[gpu].mean()),
@@ -106,6 +121,18 @@ namespace proginfo
           _dev = nvml::device::get_handle_by_index(gpu);
           nvml::device::get_memory_info(_dev, &tmp, &tmp2);
           _ramstats[gpu].add_sample(tmp);
+        }
+      };
+      
+      
+      
+      void poll_util()
+      {
+        for (int gpu=0; gpu<_ngpus; gpu++)
+        {
+          _dev = nvml::device::get_handle_by_index(gpu);
+          int util = nvml::device::get_utilization(_dev);
+          _utilstats[gpu].add_sample(util);
         }
       };
   };
