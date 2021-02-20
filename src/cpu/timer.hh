@@ -6,6 +6,7 @@
 #include <chrono>
 #include <climits>
 #include <ctime>
+#include <thread>
 
 
 namespace proginfo
@@ -53,14 +54,17 @@ namespace proginfo
     
     
     protected:
-      std::chrono::high_resolution_clock::time_point _wstart;
-      clock_t _pstart;
       float _wtime;
       float _ptime;
     
     
     
     private:
+      std::chrono::high_resolution_clock::time_point _wstart;
+      clock_t _pstart;
+      
+      
+      
       void print_md()
       {
         printf("* Wall time: %.3f\n", _wtime);
