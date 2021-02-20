@@ -8,11 +8,21 @@
 
 proginfo is a small utility for getting some basic information about a program, sort of like a fancier version of the unix command `time`. This is not a replacement for a real profiler.
 
-The program reports wallclock time and system level RAM usage for both CPU and any (NVIDIA) GPUs. Sampled values are reported as follows
+The program reports wallclock time, and system-level utilization and RAM usage for both CPU and any (NVIDIA) GPUs.
 
-    MIN/MEAN/MAX (SD) / TOTAL
 
-Additional compute/resource utilization metrics will be added soon.
+## Notes
+
+1. Sampled values are reported as follows
+```
+MIN/MEAN/MAX (SD) / TOTAL
+```
+
+2. GPU utilization rates are the "percent of time over the past second in which any work has been executing on the GPU." ([reference](http://developer.download.nvidia.com/compute/DevZone/NVML/doxygen/structnvml_utilization__t.html)).
+
+3. GPU memory numbers are in GiB (divide bytes by 1024^3). The consumed memory is "equal to the sum of memory allocated by all active channels on the device." ([reference](http://developer.download.nvidia.com/compute/DevZone/NVML/doxygen/group__group4.html#g2dfeb1db82aa1de91aa6edf941c85ca8))
+
+4. CPU utilization is reported by `clock()`, which is wrong. Will probably fix eventually.
 
 
 
@@ -36,8 +46,10 @@ $ ./proginfo Rscript -e "1+1"
   - Utilization: 1.284%
   - RAM: 15.451/15.482/15.506 (62.797) / 62.814 GiB
 * GPU
+  - Utilization
+      + (Device 0) 1/1.00/1 (0.00) / 100%
   - RAM:
-    + (Device 0) 1.084/1.084/1.084 (0.000) / 7.926 GiB
+      + (Device 0) 1.084/1.084/1.084 (0.000) / 7.926 GiB
 ```
 
 And here's a code that allocates some data on the GPU:
@@ -53,6 +65,8 @@ $ ./proginfo Rscript -e 'suppressMessages(library(fmlr)); c = card(); x = gpumat
   - Utilization: 0.919%
   - RAM: 15.471/15.632/15.855 (62.669) / 62.814 GiB
 * GPU
+  - Utilization
+      + (Device 0) 0/6.69/44 (12.37) / 100%
   - RAM:
-    + (Device 0) 1.084/1.180/3.636 (0.329) / 7.926 GiB
+      + (Device 0) 1.059/1.159/3.611 (0.342) / 7.926 GiB
 ```
