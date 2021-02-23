@@ -79,6 +79,14 @@ namespace proginfo
       
       void print_md()
       {
+        int ver = nvml::system::get_cuda_driver_version();
+        int ver_maj = ver/1000;
+        int ver_min = (ver - 1000*ver_maj)/10;
+        printf("* GPU (CUDA=%d.%d Driver=%s)\n",
+          ver_maj, ver_min,
+          nvml::system::get_driver_version().c_str()
+        );
+        
         printf("  - Utilization\n");
         for (int gpu=0; gpu<_ngpus; gpu++)
           printf("      + (Device %d) %d/%.2f/%d (%.2f) / 100%%\n",
@@ -86,7 +94,8 @@ namespace proginfo
             _utilstats[gpu].min(),
             _utilstats[gpu].mean(),
             _utilstats[gpu].max(),
-            _utilstats[gpu].sd());
+            _utilstats[gpu].sd()
+          );
         
         printf("  - RAM:\n");
         for (int gpu=0; gpu<_ngpus; gpu++)
@@ -96,7 +105,8 @@ namespace proginfo
             b2gb(_ramstats[gpu].mean()),
             b2gb(_ramstats[gpu].max()),
             b2gb(_ramstats[gpu].sd()),
-            b2gb(_totalram[gpu]));
+            b2gb(_totalram[gpu])
+          );
       }
       
       
