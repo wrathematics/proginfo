@@ -80,8 +80,8 @@ namespace proginfo
       void print_md()
       {
         int ver = nvml::system::get_cuda_driver_version();
-        int ver_maj = ver/1000;
-        int ver_min = (ver - 1000*ver_maj)/10;
+        int ver_maj = ver / 1000;
+        int ver_min = (ver % 1000) / 10;
         printf("* GPU (CUDA=%d.%d Driver=%s)\n",
           ver_maj, ver_min,
           nvml::system::get_driver_version().c_str()
